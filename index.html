@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание занятий</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJwDDfQeTg9k85pA94hFfu4s5g6wFgRrmI6U8F7y5j2z6kP9cQuKPRbZkdpR" crossorigin="anonymous">
+    <style>
+        .card {
+            margin-bottom: 20px;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Расписание занятий</h1>
+        <div id="schedule-list" class="row"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gyb3FstF7Dlfoqf3b5tLs8fTt7rx0p/3H5yG5pVZ1zo4xqlpxp" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0p3y3rL5jxO+akRpppW85khF6I8sm/6llPHMejoI9R8nsf+S" crossorigin="anonymous"></script>
+    <script>
+        const scheduleData = [{
+            name: "Стрип-пластика",
+            time: "10:00 - 11:00",
+            maxParticipants: 15,
+            currentParticipants: 8
+        }, {
+            name: "Пилатес",
+            time: "11:00 - 12:00",
+            maxParticipants: 12,
+            currentParticipants: 12
+        }, {
+            name: "Кардио-тренировка",
+            time: "12:00 - 13:00",
+            maxParticipants: 20,
+            currentParticipants: 10
+        }];
+
+        function renderSchedule() {
+            const scheduleList = document.getElementById('schedule-list');
+            scheduleList.innerHTML = '';
+
+            scheduleData.forEach((activity, index) => {
+                const card = document.createElement('div');
+                card.classList.add('col-12', 'col-md-4');
+
+                card.innerHTML = `
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">${activity.name}</h5>
+                    <p class="card-text">Время: ${activity.time}</p>
+                    <p class="card-text">Максимальное количество участников: ${activity.maxParticipants}</p>
+                    <p class="card-text">Записано: ${activity.currentParticipants}</p>
+                    <div class="button-container">
+                        <button class="btn btn-primary" id="book-button-${index}" ${activity.currentParticipants >= activity.maxParticipants ? 'disabled' : ''} onclick="bookActivity(${index})">Записаться</button>
+                        <button class="btn btn-danger" id="cancel-button-${index}" ${activity.currentParticipants === 0 ? 'disabled' : ''} onclick="cancelBooking(${index})">Отменить запись</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+                scheduleList.appendChild(card);
+            });
+        }
+
+        function bookActivity(index) {
+            if (scheduleData[index].currentParticipants < scheduleData[index].maxParticipants) {
+                scheduleData[index].currentParticipants++;
+                renderSchedule();
+            }
+        }
+
+        function cancelBooking(index) {
+            if (scheduleData[index].currentParticipants > 0) {
+                scheduleData[index].currentParticipants--;
+                renderSchedule();
+            }
+        }
+
+        renderSchedule();
+    </script>
+
+</body>
+
+</html>
